@@ -10,6 +10,6 @@ def welcome(request):
 
 urlpatterns = [
     path('', home),
-    path('admin/', admin.site.urls),
     path('welcome/', welcome),
+    path('admin/', admin.site.urls),
 ]
