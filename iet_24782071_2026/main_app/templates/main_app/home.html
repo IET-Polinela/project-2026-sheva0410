@@ -1,12 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Smart City Report</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+
+            /* 🔥 BACKGROUND KEREN */
+            background: linear-gradient(135deg, #4facfe, #6a11cb);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar h2 {
+            margin: 0;
+            display: inline;
+        }
+
+        .navbar a {
+            float: right;
+            color: white;
+            text-decoration: none;
+            background: #28a745;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin: 15px auto;
+            border-radius: 10px;
+            max-width: 600px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+
+            /* efek hover */
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .btn {
+            padding: 6px 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .edit {
+            background-color: orange;
+            color: black;
+        }
+
+        .delete {
+            background-color: red;
+            color: white;
+        }
+
+        .empty {
+            color: white;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Selamat Datang di Kota Bandar Lampung</h1>
-<p>Ini adalah halaman utama website saya.</p>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>Smart City</h2>
+        <a href="/create/">+ Tambah Laporan</a>
+    </div>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <h1>Selamat Datang di Smart City Bandar Lampung</h1>
+            <p>Aplikasi pelaporan masalah kota oleh masyarakat</p>
+        </div>
+
+        <h2 style="color:white;">Daftar Laporan</h2>
+
+        {% if reports %}
+            {% for report in reports %}
+                <div class="card">
+                    <h3>{{ report.title }}</h3>
+                    <p><b>Kategori:</b> {{ report.category }}</p>
+                    <p>{{ report.description }}</p>
+                    <p><b>Lokasi:</b> {{ report.location }}</p>
+                    <p><b>Status:</b> {{ report.status }}</p>
+
+                    <a href="/update/{{ report.id }}" class="btn edit">Edit</a>
+                    <a href="/delete/{{ report.id }}" class="btn delete">Hapus</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">Belum ada laporan.</p>
+        {% endif %}
+
+    </div>
 
 </body>
 </html>

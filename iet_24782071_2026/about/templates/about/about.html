@@ -2,11 +2,90 @@
 <html>
 <head>
     <title>About</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: linear-gradient(135deg, #4facfe, #6a11cb);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: rgba(0,0,0,0.2);
+            padding: 15px;
+            color: white;
+        }
+
+        .navbar h2 {
+            display: inline;
+            margin: 0;
+        }
+
+        .navbar a {
+            float: right;
+            color: white;
+            text-decoration: none;
+            background: #007BFF;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 500px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .highlight {
+            color: #007BFF;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Halaman About</h1>
-<p>Ini adalah halaman tentang Kota Bandar Lampung.</p>
+<div class="navbar">
+    <h2>Smart City</h2>
+    <a href="/">Home</a>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h1>Tentang Aplikasi</h1>
+
+        <p>
+            Aplikasi <span class="highlight">Smart City Bandar Lampung</span> 
+            digunakan untuk membantu masyarakat dalam melaporkan berbagai 
+            permasalahan yang terjadi di lingkungan kota.
+        </p>
+
+        <p>
+            Dengan adanya aplikasi ini, masyarakat <span class="highlight">Bandar Lampung</span> 
+            dapat menyampaikan laporan secara cepat dan mudah kepada pihak terkait.
+        </p>
+
+        <p>
+            Tujuan utama dari sistem ini adalah meningkatkan kualitas pelayanan publik 
+            serta menciptakan kota yang lebih responsif dan modern.
+        </p>
+    </div>
+</div>
 
 </body>
 </html>
