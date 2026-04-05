@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'smartcity_db',
         'USER': 'postgres',
-        'PASSWORD': 'password123',
+        'PASSWORD': 'tripolinela',
         'HOST': 'localhost',
         'PORT': '5432',
     }
