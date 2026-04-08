@@ -15,6 +15,6 @@ urlpatterns = [
     path('update/<int:pk>/', ReportUpdateView.as_view(), name='update_report'),
     path('delete/<int:pk>/', ReportDeleteView.as_view(), name='delete_report'),
 
-    # 🔥 workflow
+    #  workflow
     path('update-status/<int:pk>/', ReportUpdateStatusView.as_view(), name='update_status'),
 ]
