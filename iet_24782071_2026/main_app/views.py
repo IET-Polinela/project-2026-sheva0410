@@ -41,7 +41,7 @@ class ReportDeleteView(DeleteView):
     success_url = reverse_lazy('report_list')
 
 
-# 🔥 WORKFLOW STATUS (INI YANG BARU)
+# WORKFLOW STATUS
 class ReportUpdateStatusView(View):
     def post(self, request, pk):
         report = get_object_or_404(Report, pk=pk)
