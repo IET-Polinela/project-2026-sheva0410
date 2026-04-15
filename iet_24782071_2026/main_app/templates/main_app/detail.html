@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <h3 class="mb-3">{{ object.title }}</h3>
+
+        <p><b>Kategori:</b> {{ object.category }}</p>
+        <p><b>Deskripsi:</b> {{ object.description }}</p>
+        <p><b>Lokasi:</b> {{ object.location }}</p>
+
+        <p>
+            <b>Status:</b>
+            {% if object.status == 'REPORTED' %}
+                <span class="badge bg-secondary">Reported</span>
+            {% elif object.status == 'VERIFIED' %}
+                <span class="badge bg-info">Verified</span>
+            {% elif object.status == 'IN_PROGRESS' %}
+                <span class="badge bg-warning text-dark">In Progress</span>
+            {% elif object.status == 'RESOLVED' %}
+                <span class="badge bg-success">Resolved</span>
+            {% endif %}
+        </p>
+
+        <a href="/" class="btn btn-secondary">Kembali</a>
+
+    </div>
+</div>
+
+{% endblock %}

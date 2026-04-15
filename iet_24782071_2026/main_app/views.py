@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.shortcuts import get_object_or_404, redirect
 from .models import Report
-
+from django.contrib import messages
 
 # LIST (READ)
 class ReportListView(ListView):
@@ -25,6 +25,9 @@ class ReportCreateView(CreateView):
     template_name = 'main_app/create_report.html'
     success_url = reverse_lazy('report_list')
 
+    def form_valid(self, form):
+        messages.success(self.request, "Laporan berhasil ditambahkan!")
+        return super().form_valid(form)
 
 # UPDATE
 class ReportUpdateView(UpdateView):
@@ -33,6 +36,10 @@ class ReportUpdateView(UpdateView):
     template_name = 'main_app/update_report.html'
     success_url = reverse_lazy('report_list')
 
+    def form_valid(self, form):
+        messages.success(self.request, "Laporan berhasil diperbarui!")
+        return super().form_valid(form)
+
 
 # DELETE
 class ReportDeleteView(DeleteView):
@@ -40,12 +47,16 @@ class ReportDeleteView(DeleteView):
     template_name = 'main_app/delete_report.html'
     success_url = reverse_lazy('report_list')
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "Laporan berhasil dihapus!")
+        return super().delete(request, *args, **kwargs)
+
 
 # WORKFLOW STATUS
 class ReportUpdateStatusView(View):
     def post(self, request, pk):
         report = get_object_or_404(Report, pk=pk)
-        new_status = request.POST.get('status')
-        report.status = new_status
+        report.status = request.POST.get('status')
         report.save()
+        messages.success(request, "Status berhasil diubah!")
         return redirect('report_list')

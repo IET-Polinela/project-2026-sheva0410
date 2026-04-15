@@ -1,106 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Tambah Laporan</title>
+{% extends 'base.html' %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: linear-gradient(135deg, #4facfe, #6a11cb);
-            min-height: 100vh;
-        }
+{% block content %}
 
-        /* NAVBAR */
-        .navbar {
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            color: white;
-            backdrop-filter: blur(10px);
-        }
+<div class="card shadow">
+    <div class="card-body">
 
-        .navbar h2 {
-            margin: 0;
-            display: inline;
-        }
+        <h3 class="mb-4">Tambah Laporan</h3>
 
-        .navbar a {
-            float: right;
-            color: white;
-            text-decoration: none;
-            background: #007BFF;
-            padding: 8px 12px;
-            border-radius: 5px;
-        }
+        <form method="POST">
+            {% csrf_token %}
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 80vh;
-        }
+            <!-- TITLE -->
+            <div class="mb-3">
+                <label class="form-label">Judul</label>
+                {{ form.title }}
+            </div>
 
-        .form-card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            width: 400px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
-        }
+            <!-- CATEGORY -->
+            <div class="mb-3">
+                <label class="form-label">Kategori</label>
+                {{ form.category }}
+            </div>
 
-        h2 {
-            text-align: center;
-        }
+            <!-- DESCRIPTION -->
+            <div class="mb-3">
+                <label class="form-label">Deskripsi</label>
+                {{ form.description }}
+            </div>
 
-        form p {
-            margin-bottom: 10px;
-        }
+            <!-- LOCATION -->
+            <div class="mb-3">
+                <label class="form-label">Lokasi</label>
+                {{ form.location }}
+            </div>
 
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+            <!-- 🔥 BUTTON -->
+            <button id="submitBtn" class="btn btn-primary">Simpan</button>
+            <a href="/" class="btn btn-secondary">Kembali</a>
 
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
+        </form>
 
-        button:hover {
-            background: #218838;
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- NAVBAR -->
-    <div class="navbar">
-        <h2>Smart City</h2>
-        <a href="/">Kembali</a>
     </div>
+</div>
 
-    <!-- FORM -->
-    <div class="container">
-        <div class="form-card">
-            <h2>Tambah Laporan</h2>
+<!-- 🔥 LOADING FEEDBACK -->
+<script>
+document.querySelector("form").addEventListener("submit", function() {
+    const btn = document.getElementById("submitBtn");
+    btn.innerText = "Loading...";
+    btn.disabled = true;
+});
+</script>
 
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Simpan</button>
-            </form>
-        </div>
-    </div>
-
-</body>
-</html>
+{% endblock %}
