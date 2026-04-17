@@ -1,24 +1,22 @@
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
 from django.views import View
 from django.shortcuts import get_object_or_404, redirect
-from .models import Report
+from django.urls import reverse_lazy
 from django.contrib import messages
+from .models import Report
 
-# LIST (READ)
+
 class ReportListView(ListView):
     model = Report
     template_name = 'main_app/home.html'
     context_object_name = 'reports'
 
 
-# DETAIL
 class ReportDetailView(DetailView):
     model = Report
     template_name = 'main_app/detail.html'
 
 
-# CREATE
 class ReportCreateView(CreateView):
     model = Report
     fields = ['title', 'category', 'description', 'location']
@@ -29,7 +27,7 @@ class ReportCreateView(CreateView):
         messages.success(self.request, "Laporan berhasil ditambahkan!")
         return super().form_valid(form)
 
-# UPDATE
+
 class ReportUpdateView(UpdateView):
     model = Report
     fields = ['title', 'category', 'description', 'location']
@@ -41,7 +39,6 @@ class ReportUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-# DELETE
 class ReportDeleteView(DeleteView):
     model = Report
     template_name = 'main_app/delete_report.html'
@@ -52,7 +49,6 @@ class ReportDeleteView(DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-# WORKFLOW STATUS
 class ReportUpdateStatusView(View):
     def post(self, request, pk):
         report = get_object_or_404(Report, pk=pk)
