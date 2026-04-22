@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<nav>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active">Reports</li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Daftar Laporan</h2>
+
+    <a href="/create/" class="btn btn-primary shadow">
+        <i class="bi bi-plus-circle"></i> Tambah Laporan
+    </a>
+</div>
+
+{% if reports %}
+<table class="table table-bordered table-striped table-hover">
+
+    <thead class="table-dark">
+        <tr>
+            <th>Judul</th>
+            <th>Lokasi</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for report in reports %}
+        <tr>
+            <td>{{ report.title }}</td>
+            <td>{{ report.location }}</td>
+
+            <!-- STATUS BADGE -->
+            <td>
+                {% if report.status == 'REPORTED' %}
+                    <span class="badge bg-secondary">Reported</span>
+                {% elif report.status == 'VERIFIED' %}
+                    <span class="badge bg-info">Verified</span>
+                {% elif report.status == 'IN_PROGRESS' %}
+                    <span class="badge bg-warning text-dark">In Progress</span>
+                {% elif report.status == 'RESOLVED' %}
+                    <span class="badge bg-success">Resolved</span>
+                {% endif %}
+            </td>
+
+            <td>
+
+                <!-- 🔥 WORKFLOW STATUS -->
+                <form method="POST" action="/update-status/{{ report.id }}/" style="display:inline;">
+                    {% csrf_token %}
+
+                    {% if report.status == 'REPORTED' %}
+                        <button class="btn btn-primary btn-sm" name="status" value="VERIFIED">
+                            Verifikasi
+                        </button>
+
+                    {% elif report.status == 'VERIFIED' %}
+                        <button class="btn btn-warning btn-sm" name="status" value="IN_PROGRESS">
+                            Proses
+                        </button>
+
+                    {% elif report.status == 'IN_PROGRESS' %}
+                        <button class="btn btn-success btn-sm" name="status" value="RESOLVED">
+                            Selesai
+                        </button>
+                    {% endif %}
+                </form>
+
+                <br><br>
+
+                <!-- AKSI -->
+                <a href="/detail/{{ report.id }}/" class="btn btn-outline-primary btn-sm">Detail</a>
+                <a href="/update/{{ report.id }}/" class="btn btn-outline-warning btn-sm">Edit</a>
+
+                <form method="POST" action="/delete/{{ report.id }}/" style="display:inline;">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger btn-sm">
+                        Hapus
+                    </button>
+                </form>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% else %}
+<div class="alert alert-info text-center">
+    <h5>Belum ada laporan</h5>
+    <a href="/create/" class="btn btn-primary mt-2">Tambah Laporan</a>
+</div>
+{% endif %}
+
+{% endblock %}

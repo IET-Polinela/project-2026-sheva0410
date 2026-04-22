@@ -26,7 +26,18 @@ INSTALLED_APPS = [
     'main_app',
     'about',
     'contacts',
+    'usermanagement_24782071',
 ]
+
+
+# CUSTOM USER MODEL
+AUTH_USER_MODEL = 'usermanagement_24782071.User'
+
+
+# LOGIN & LOGOUT REDIRECT (WAJIB LAB 6)
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
 
 
 # MIDDLEWARE
@@ -44,12 +55,12 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'iet_24782071_2026.urls'
 
 
-# 🔥 TEMPLATE CONFIG (INI YANG DIPERBAIKI)
+# TEMPLATE
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
 
-        # 🔥 WAJIB ADA UNTUK BASE.HTML
+        # GLOBAL TEMPLATE
         'DIRS': [BASE_DIR / 'templates'],
 
         'APP_DIRS': True,
@@ -99,11 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # INTERNATIONALIZATION
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
