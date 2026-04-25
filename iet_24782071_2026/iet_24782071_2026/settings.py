@@ -34,7 +34,7 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'usermanagement_24782071.User'
 
 
-# LOGIN & LOGOUT REDIRECT (WAJIB LAB 6)
+# LOGIN & LOGOUT REDIRECT 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
@@ -55,7 +55,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'iet_24782071_2026.urls'
 
 
-# TEMPLATE
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
