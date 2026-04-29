@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'about',
     'contacts',
     'usermanagement_24782071',
+    'dashboard_24782071',
 ]
 
 

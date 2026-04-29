@@ -6,15 +6,785 @@
 <title>{% block title %}Smart City{% endblock %}</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+    :root {
+        --bs-primary: #8d63ff;
+        --bs-primary-rgb: 141, 99, 255;
+        --bs-secondary: #2b2340;
+        --bs-secondary-rgb: 43, 35, 64;
+        --bs-success: #7b6dff;
+        --bs-success-rgb: 123, 109, 255;
+        --bs-info: #9f86ff;
+        --bs-info-rgb: 159, 134, 255;
+        --bs-warning: #e6d9ff;
+        --bs-warning-rgb: 230, 217, 255;
+        --bs-danger: #ff7aa2;
+        --bs-danger-rgb: 255, 122, 162;
+        --bs-light: #f5f0ff;
+        --bs-light-rgb: 245, 240, 255;
+        --bs-dark: #161220;
+        --bs-dark-rgb: 22, 18, 32;
+        --app-bg: #110d19;
+        --app-surface: rgba(28, 22, 42, 0.88);
+        --app-surface-strong: rgba(40, 31, 59, 0.96);
+        --app-surface-soft: rgba(255, 255, 255, 0.05);
+        --app-border: rgba(179, 153, 255, 0.18);
+        --app-border-strong: rgba(179, 153, 255, 0.3);
+        --app-text: #f7f4ff;
+        --app-text-muted: #cdbff4;
+        --app-heading: #ffffff;
+        --app-shadow: 0 18px 45px rgba(8, 5, 17, 0.32);
+        --app-gradient: linear-gradient(135deg, #120d1d 0%, #261a3b 45%, #3b2460 100%);
+        --app-gradient-soft: linear-gradient(135deg, rgba(141, 99, 255, 0.22), rgba(255, 255, 255, 0.04));
+    }
+
+    html, body {
+        min-height: 100%;
+    }
+
+    body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--app-text);
+        background:
+            radial-gradient(circle at top left, rgba(141, 99, 255, 0.25), transparent 30%),
+            radial-gradient(circle at top right, rgba(116, 81, 214, 0.18), transparent 28%),
+            linear-gradient(180deg, #181125 0%, #140f1f 100%);
+        letter-spacing: 0.01em;
+    }
+
+    body,
+    .container,
+    .row,
+    .col,
+    .col-md-4,
+    .col-md-6,
+    .col-lg-5,
+    .col-lg-7,
+    .col-lg-8 {
+        color: var(--app-text);
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+            linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 30%),
+            linear-gradient(315deg, rgba(141, 99, 255, 0.08), transparent 45%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    a {
+        color: #d9c9ff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #f3edff;
+    }
+
+    strong,
+    b,
+    .fw-bold,
+    .fw-semibold {
+        color: #ffffff;
+    }
+
+    h1, h2, h3, h4, h5, h6,
+    .navbar-brand,
+    .modal-title,
+    .card-title {
+        color: var(--app-heading);
+        font-weight: 700;
+    }
+
+    p, span, label, li, td, th, small, div, ul, ol {
+        color: inherit;
+    }
+
+    p,
+    li,
+    .lead,
+    .card p,
+    .card li,
+    .card-body p,
+    .card-body li,
+    .table td,
+    .table th,
+    .alert,
+    .modal-body,
+    .modal-body p,
+    .modal-body li {
+        color: var(--app-text) !important;
+    }
+
+    .navbar {
+        background: linear-gradient(135deg, rgba(42, 31, 63, 0.95), rgba(20, 15, 31, 0.95)) !important;
+        border-bottom: 1px solid var(--app-border);
+        box-shadow: 0 10px 30px rgba(6, 4, 12, 0.3);
+        backdrop-filter: blur(14px);
+    }
+
+    .navbar-brand {
+        letter-spacing: 0.04em;
+    }
+
+    .nav-link {
+        color: var(--app-text-muted) !important;
+        transition: color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+        color: #ffffff !important;
+    }
+
+    .btn {
+        border-radius: 0.95rem;
+        font-weight: 600;
+        border-width: 1px;
+        box-shadow: none;
+    }
+
+    .btn-primary,
+    .btn-success,
+    .btn-info,
+    .btn-warning {
+        color: #fff;
+        border-color: transparent;
+        background-image: linear-gradient(135deg, #7c54f5, #a36dff);
+    }
+
+    .btn-primary:hover,
+    .btn-success:hover,
+    .btn-info:hover,
+    .btn-warning:hover {
+        color: #fff;
+        background-image: linear-gradient(135deg, #8d63ff, #b489ff);
+    }
+
+    .btn-light {
+        color: #ffffff;
+        background: linear-gradient(135deg, rgba(131, 92, 245, 0.96), rgba(180, 131, 255, 0.96));
+        border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-light:hover {
+        color: #ffffff;
+        background: linear-gradient(135deg, rgba(145, 106, 255, 0.98), rgba(191, 151, 255, 0.98));
+    }
+
+    .btn-secondary,
+    .btn-outline-warning,
+    .btn-outline-danger {
+        color: var(--app-text);
+        border-color: var(--app-border-strong);
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .btn-secondary:hover,
+    .btn-outline-warning:hover,
+    .btn-outline-danger:hover {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.24);
+        background: rgba(255, 255, 255, 0.09);
+    }
+
+    .btn-link,
+    .btn-link:hover {
+        color: #ffdcf0 !important;
+    }
+
+    .card,
+    .modal-content,
+    .list-group-item,
+    .alert,
+    .table,
+    .breadcrumb,
+    .dropdown-menu {
+        border: 1px solid var(--app-border);
+        background: var(--app-surface);
+        box-shadow: var(--app-shadow);
+    }
+
+    .card,
+    .modal-content {
+        border-radius: 1.4rem;
+        overflow: hidden;
+    }
+
+    .card,
+    .card-body,
+    .modal-content,
+    .modal-body,
+    .modal-header,
+    .breadcrumb,
+    .list-group-item {
+        color: var(--app-text);
+    }
+
+    .card-body,
+    .modal-body,
+    .modal-header {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    }
+
+    .bg-primary {
+        background: linear-gradient(135deg, #362252, #6a45c4 55%, #8f63ff) !important;
+    }
+
+    .app-hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(215, 198, 255, 0.14);
+        border-radius: 1.6rem;
+        background:
+            radial-gradient(circle at top right, rgba(255, 255, 255, 0.16), transparent 30%),
+            linear-gradient(135deg, #2e1d48 0%, #5a38a9 52%, #8f63ff 100%);
+    }
+
+    .app-hero::after {
+        content: "";
+        position: absolute;
+        inset: auto -10% -45% auto;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 60%);
+        pointer-events: none;
+    }
+
+    .feature-card {
+        height: 100%;
+    }
+
+    .feature-card .card-body {
+        padding: 2rem 1.5rem;
+    }
+
+    .feature-card p {
+        color: #ddd2fb !important;
+    }
+
+    .feature-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1.25rem;
+        margin-bottom: 1rem;
+        color: #fff !important;
+        background: linear-gradient(135deg, rgba(124, 84, 245, 0.95), rgba(170, 122, 255, 0.95));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .content-panel {
+        border-radius: 1.35rem;
+        background: var(--app-gradient-soft);
+    }
+
+    .text-white {
+        color: #fff !important;
+    }
+
+    .text-light,
+    .text-success,
+    .text-warning,
+    .text-primary,
+    .text-info {
+        color: #d9c9ff !important;
+    }
+
+    .form-control,
+    .form-select,
+    input,
+    textarea,
+    select {
+        color: var(--app-text);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(179, 153, 255, 0.24);
+        border-radius: 0.95rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    input:focus,
+    textarea:focus,
+    select:focus {
+        color: var(--app-text);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(180, 150, 255, 0.7);
+        box-shadow: 0 0 0 0.2rem rgba(141, 99, 255, 0.2);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #a89ac8;
+    }
+
+    option {
+        color: #f7f4ff;
+        background: #20182f;
+    }
+
+    form p {
+        margin-bottom: 1rem;
+    }
+
+    form label {
+        display: block;
+        margin-bottom: 0.45rem;
+        color: #efe8ff;
+        font-weight: 600;
+    }
+
+    .table {
+        color: var(--app-text);
+        border-radius: 1.1rem;
+        overflow: hidden;
+    }
+
+    .table > :not(caption) > * > * {
+        color: var(--app-text);
+        background-color: rgba(255, 255, 255, 0.02);
+        border-bottom-color: rgba(179, 153, 255, 0.12);
+    }
+
+    .table-striped > tbody > tr:nth-of-type(odd) > * {
+        background-color: rgba(255, 255, 255, 0.035);
+    }
+
+    .table-hover > tbody > tr:hover > * {
+        background-color: rgba(141, 99, 255, 0.12);
+    }
+
+    .table-dark,
+    .table-dark > tr > th,
+    .table-dark > * > tr > * {
+        color: #fff !important;
+        background: linear-gradient(135deg, #33204d, #241933) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .breadcrumb {
+        padding: 0.85rem 1.1rem;
+        border-radius: 1rem;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before,
+    .breadcrumb-item.active {
+        color: #b9abd7;
+    }
+
+    .breadcrumb-item a {
+        color: #e4d8ff;
+    }
+
+    .badge {
+        padding: 0.55em 0.8em;
+        border-radius: 999px;
+        font-weight: 700;
+    }
+
+    .badge.bg-secondary {
+        background: rgba(164, 136, 255, 0.22) !important;
+        color: #efe8ff;
+    }
+
+    .badge.bg-info {
+        background: rgba(137, 103, 255, 0.28) !important;
+        color: #fff;
+    }
+
+    .badge.bg-warning {
+        background: rgba(227, 201, 255, 0.2) !important;
+        color: #f7efff !important;
+    }
+
+    .badge.bg-success {
+        background: rgba(123, 109, 255, 0.3) !important;
+        color: #fff;
+    }
+
+    .alert-success {
+        color: #f5efff !important;
+        background: linear-gradient(135deg, rgba(88, 64, 148, 0.82), rgba(63, 44, 109, 0.9));
+        border-color: rgba(173, 143, 255, 0.22);
+    }
+
+    .alert-info {
+        color: #efeaff !important;
+        background: linear-gradient(135deg, rgba(72, 53, 121, 0.86), rgba(48, 35, 82, 0.92));
+        border-color: rgba(173, 143, 255, 0.2);
+    }
+
+    .alert-danger,
+    .alert-error {
+        color: #fff0f5 !important;
+        background: linear-gradient(135deg, rgba(124, 48, 82, 0.88), rgba(86, 31, 56, 0.94));
+        border-color: rgba(255, 153, 187, 0.22);
+    }
+
+    .alert-warning {
+        color: #fff7e8 !important;
+        background: linear-gradient(135deg, rgba(133, 92, 33, 0.88), rgba(96, 66, 22, 0.94));
+        border-color: rgba(255, 209, 128, 0.24);
+    }
+
+    .alert .btn-close {
+        filter: invert(1) brightness(1.5);
+    }
+
+    .alert a:not(.btn) {
+        color: #ffffff;
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+    }
+
+    .alert .btn-primary,
+    .alert .btn-success,
+    .alert .btn-info,
+    .alert .btn-warning {
+        background-image: linear-gradient(135deg, rgba(134, 95, 246, 0.95), rgba(112, 78, 214, 0.95));
+        border-color: rgba(255, 255, 255, 0.08);
+        box-shadow: none;
+    }
+
+    .alert .btn-primary:hover,
+    .alert .btn-success:hover,
+    .alert .btn-info:hover,
+    .alert .btn-warning:hover {
+        background-image: linear-gradient(135deg, rgba(145, 108, 250, 0.98), rgba(124, 89, 225, 0.98));
+    }
+
+    .empty-state-alert {
+        padding: 2rem 1.5rem;
+        border-radius: 1.3rem;
+    }
+
+    .empty-state-alert h5 {
+        margin-bottom: 0.9rem;
+        color: #ffffff;
+    }
+
+    .empty-state-alert p {
+        max-width: 560px;
+        margin: 0 auto 1rem;
+        color: #ddd2fb !important;
+    }
+
+    .flash-stack {
+        max-width: 420px;
+        margin-left: auto;
+    }
+
+    .flash-alert {
+        position: relative;
+        padding: 1rem 1.1rem 1rem 3.5rem;
+        border-radius: 1.15rem;
+        border-width: 1px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 18px 34px rgba(7, 4, 15, 0.26);
+    }
+
+    .flash-alert + .flash-alert {
+        margin-top: 0.8rem;
+    }
+
+    .flash-alert::before {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        width: 1.75rem;
+        height: 1.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        font-family: "bootstrap-icons";
+        font-size: 0.9rem;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .flash-alert.alert-success::before {
+        content: "\f26a";
+    }
+
+    .flash-alert.alert-info::before {
+        content: "\f431";
+    }
+
+    .flash-alert.alert-danger::before,
+    .flash-alert.alert-error::before {
+        content: "\f623";
+    }
+
+    .flash-alert.alert-warning::before {
+        content: "\f33a";
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        border-radius: 999px;
+        padding-inline: 0.85rem;
+    }
+
+    .action-btn i {
+        font-size: 0.86rem;
+        line-height: 1;
+    }
+
+    .action-btn-detail {
+        color: #fff;
+        border-color: rgba(167, 138, 255, 0.32);
+        background: linear-gradient(135deg, rgba(121, 86, 229, 0.95), rgba(152, 106, 255, 0.95));
+    }
+
+    .action-btn-detail:hover {
+        color: #fff;
+        background: linear-gradient(135deg, rgba(132, 97, 242, 0.98), rgba(163, 118, 255, 0.98));
+    }
+
+    .action-btn-edit {
+        color: #f4ecff;
+        border-color: rgba(233, 199, 255, 0.26);
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .action-btn-edit:hover {
+        color: #ffffff;
+        border-color: rgba(233, 199, 255, 0.38);
+        background: rgba(233, 199, 255, 0.12);
+    }
+
+    .action-btn-delete {
+        color: #ffdbe6;
+        border-color: rgba(255, 153, 187, 0.24);
+        background: rgba(255, 122, 162, 0.08);
+    }
+
+    .action-btn-delete:hover {
+        color: #fff1f6;
+        border-color: rgba(255, 153, 187, 0.34);
+        background: rgba(255, 122, 162, 0.16);
+    }
+
+    .list-group-item {
+        color: var(--app-text);
+        border-left: none;
+        border-right: none;
+        border-radius: 0 !important;
+    }
+
+    .modal-header {
+        position: relative;
+        border-bottom-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .modal-body p,
+    .modal-body b,
+    .modal-body strong {
+        color: var(--app-text);
+    }
+
+    .btn-close {
+        filter: invert(1) brightness(1.2);
+        opacity: 1;
+    }
+
+    .modal-header .btn-close,
+    .alert .btn-close {
+        position: relative;
+        z-index: 5;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
+    .modal-dismiss-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.4rem;
+        height: 2.4rem;
+        padding: 0;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #f7f4ff;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        pointer-events: auto;
+        z-index: 2105;
+    }
+
+    .modal-dismiss-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+
+    .app-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 2200;
+    }
+
+    .app-modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 7, 18, 0.7);
+        backdrop-filter: blur(6px);
+    }
+
+    .app-modal-dialog {
+        position: relative;
+        z-index: 1;
+        width: min(680px, calc(100vw - 2rem));
+        margin: 6vh auto 0;
+        border: 1px solid var(--app-border);
+        border-radius: 1.35rem;
+        overflow: hidden;
+        background: rgba(22, 18, 33, 0.98);
+        box-shadow: 0 24px 50px rgba(5, 3, 11, 0.42);
+    }
+
+    .app-modal-header,
+    .app-modal-body {
+        padding: 1.15rem 1.35rem;
+    }
+
+    .app-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+    }
+
+    .app-modal-body {
+        background: rgba(18, 14, 27, 0.98);
+    }
+
+    body.app-modal-open {
+        overflow: hidden;
+    }
+
+    canvas {
+        filter: saturate(1.05) brightness(1.05);
+    }
+
+    .form-text,
+    .text-muted,
+    .small {
+        color: #bfaee6 !important;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1rem;
+    }
+
+    .info-block {
+        padding: 1.2rem;
+        border: 1px solid var(--app-border);
+        border-radius: 1.15rem;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .section-intro {
+        max-width: 760px;
+        margin-bottom: 1.5rem;
+        color: var(--app-text-muted);
+    }
+
+    .section-stack > * + * {
+        margin-top: 1rem;
+    }
+
+    .app-stat {
+        padding: 1.15rem 1.25rem;
+        border-radius: 1.15rem;
+        border: 1px solid var(--app-border);
+        background: rgba(255, 255, 255, 0.045);
+    }
+
+    .app-stat-number {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: #ffffff;
+        font-size: 1.6rem;
+        font-weight: 800;
+    }
+
+    .page-shell {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .page-shell-two {
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    }
+
+    .soft-card {
+        padding: 1.25rem;
+        border: 1px solid var(--app-border);
+        border-radius: 1.2rem;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    @media (min-width: 992px) {
+        .page-shell-two {
+            display: grid;
+        }
+    }
+
+    @media (max-width: 991px) {
+        .page-shell-two {
+            display: block;
+        }
+    }
+
+    .container {
+        position: relative;
+    }
+
+    .shadow,
+    .shadow-sm,
+    .shadow-lg {
+        box-shadow: var(--app-shadow) !important;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(141, 99, 255, 0.18), transparent 35%),
+                linear-gradient(180deg, #181125 0%, #140f1f 100%);
+        }
+
+        .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+    }
+</style>
 
 </head>
 <body>
 
-<!-- 🔥 NAVBAR -->
+<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 <div class="container">
-<a class="navbar-brand" href="/">Smart City</a>
+<a class="navbar-brand fw-bold" href="/">Smart City</a>
 
 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
 <span class="navbar-toggler-icon"></span>
@@ -24,22 +794,28 @@
 <ul class="navbar-nav ms-auto">
 
 <li class="nav-item">
-<a class="nav-link" href="/">Home</a>
+<a class="nav-link {% if request.path == '/' %}active fw-bold{% endif %}" href="/">Home</a>
 </li>
 
 <li class="nav-item">
-<a class="nav-link" href="/reports/">Reports</a>
+<a class="nav-link {% if '/reports' in request.path %}active fw-bold{% endif %}" href="/reports/">Reports</a>
 </li>
 
 <li class="nav-item">
-<a class="nav-link" href="/about/">About</a>
+<a class="nav-link {% if '/dashboard' in request.path %}active fw-bold{% endif %}" href="/dashboard/">
+    Dashboard
+</a>
 </li>
 
 <li class="nav-item">
-<a class="nav-link" href="/contacts/">Contact</a>
+<a class="nav-link {% if '/about' in request.path %}active fw-bold{% endif %}" href="/about/">About</a>
 </li>
 
-<!-- 🔥 NAVBAR DINAMIS -->
+<li class="nav-item">
+<a class="nav-link {% if '/contacts' in request.path %}active fw-bold{% endif %}" href="/contacts/">Contact</a>
+</li>
+
+<!-- NAVBAR DINAMIS -->
 {% if user.is_authenticated %}
 
 <li class="nav-item">
@@ -49,11 +825,10 @@
 </li>
 
 <li class="nav-item">
-    <!-- 🔥 FIX LOGOUT (POST, BUKAN LINK) -->
     <form action="/logout/" method="POST" style="display:inline;">
         {% csrf_token %}
-        <button type="submit" class="nav-link btn btn-link text-warning" style="display:inline; padding:0;">
-            <i class="bi bi-box-arrow-right"></i> Logout
+        <button type="submit" class="nav-link btn btn-link text-warning" style="padding:0;">
+            Logout
         </button>
     </form>
 </li>
@@ -61,15 +836,11 @@
 {% else %}
 
 <li class="nav-item">
-    <a class="nav-link text-success" href="/login/">
-        <i class="bi bi-box-arrow-in-right"></i> Login
-    </a>
+    <a class="nav-link text-success" href="/login/">Login</a>
 </li>
 
 <li class="nav-item">
-    <a class="nav-link text-light" href="/register/">
-        <i class="bi bi-person-plus"></i> Register
-    </a>
+    <a class="nav-link text-light" href="/register/">Register</a>
 </li>
 
 {% endif %}
@@ -79,25 +850,27 @@
 </div>
 </nav>
 
-<!-- 🔥 ALERT MESSAGE -->
+<!-- ALERT -->
 <div class="container mt-3">
 {% if messages %}
+    <div class="flash-stack">
     {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert flash-alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     {% endfor %}
+    </div>
 {% endif %}
 </div>
 
-<!-- 🔥 MAIN CONTENT -->
+<!-- CONTENT -->
 <div class="container mt-4">
 {% block content %}
 {% endblock %}
 </div>
 
-<!-- 🔥 JS -->
+<!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

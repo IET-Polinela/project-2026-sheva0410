@@ -2,26 +2,51 @@
 
 {% block content %}
 
-<div class="row justify-content-center">
-    <div class="col-md-4">
+<div class="page-shell page-shell-two">
+    <div class="card shadow">
+        <div class="card-body p-4 p-lg-5">
+            <h2 class="mb-3">Buat akun baru</h2>
+            <p class="section-intro">
+                Daftarkan akun untuk mulai mengirim laporan, menyimpan aktivitas, dan memantau perkembangan penanganan.
+            </p>
 
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button class="btn btn-success w-100">
+                    Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="section-stack">
         <div class="card shadow">
-            <div class="card-body">
-
-                <h3 class="text-center mb-4">Register</h3>
-
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-
-                    <button class="btn btn-success w-100">
-                        Register
-                    </button>
-                </form>
-
+            <div class="card-body p-4">
+                <h3 class="mb-3">Keuntungan punya akun</h3>
+                <div class="soft-card mb-3">
+                    <h5 class="mb-2">Riwayat tersimpan</h5>
+                    <p class="mb-0">Laporan Anda lebih mudah dilacak dan dikelola dari waktu ke waktu.</p>
+                </div>
+                <div class="soft-card mb-3">
+                    <h5 class="mb-2">Status lebih jelas</h5>
+                    <p class="mb-0">Perubahan progres bisa dipantau melalui halaman reports dan dashboard.</p>
+                </div>
+                <div class="soft-card">
+                    <h5 class="mb-2">Pengalaman lebih rapi</h5>
+                    <p class="mb-0">Data pengguna terorganisir dengan baik agar proses pelaporan lebih nyaman.</p>
+                </div>
             </div>
         </div>
-
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="mb-3">Saran pendaftaran</h3>
+                <p class="mb-0">
+                    Gunakan informasi yang mudah diingat agar Anda tidak kesulitan saat kembali masuk ke aplikasi.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 

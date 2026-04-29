@@ -8,10 +8,14 @@
 </ol>
 </nav>
 
-<div class="card">
-<div class="card-body">
+<div class="page-shell page-shell-two">
+<div class="card shadow">
+<div class="card-body p-4 p-lg-5">
 
-<h3>Edit Laporan</h3>
+<h2 class="mb-3">Perbarui Laporan</h2>
+<p class="section-intro">
+Sesuaikan isi laporan jika ada data yang perlu diperjelas agar informasi yang tampil tetap akurat.
+</p>
 
 <form method="POST">
 {% csrf_token %}
@@ -22,6 +26,36 @@
 
 </form>
 
+</div>
+</div>
+
+<div class="section-stack">
+<div class="card shadow">
+<div class="card-body p-4">
+<h3 class="mb-3">Kapan perlu diedit?</h3>
+<div class="soft-card mb-3">
+    <h5 class="mb-2">Informasi belum lengkap</h5>
+    <p class="mb-0">Tambahkan detail yang sebelumnya belum sempat dimasukkan.</p>
+</div>
+<div class="soft-card mb-3">
+    <h5 class="mb-2">Lokasi perlu diperjelas</h5>
+    <p class="mb-0">Pastikan titik atau area masalah mudah dipahami oleh petugas.</p>
+</div>
+<div class="soft-card">
+    <h5 class="mb-2">Deskripsi diperbaiki</h5>
+    <p class="mb-0">Rapikan isi laporan bila ada kekeliruan penulisan atau perubahan kondisi.</p>
+</div>
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body p-4">
+<h3 class="mb-3">Catatan</h3>
+<p class="mb-0">
+Perubahan pada laporan membantu proses monitoring tetap akurat dan memudahkan evaluasi tindak lanjut.
+</p>
+</div>
+</div>
 </div>
 </div>
 

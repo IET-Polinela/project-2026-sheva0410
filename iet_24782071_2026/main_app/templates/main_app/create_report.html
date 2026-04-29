@@ -8,10 +8,14 @@
 </ol>
 </nav>
 
-<div class="card">
-<div class="card-body">
+<div class="page-shell page-shell-two">
+<div class="card shadow">
+<div class="card-body p-4 p-lg-5">
 
-<h3>Tambah Laporan</h3>
+<h2 class="mb-3">Tambah Laporan Baru</h2>
+<p class="section-intro">
+Isi laporan dengan informasi yang jelas agar proses verifikasi dan tindak lanjut bisa berjalan lebih cepat.
+</p>
 
 <form method="POST">
 {% csrf_token %}
@@ -22,6 +26,36 @@
 
 </form>
 
+</div>
+</div>
+
+<div class="section-stack">
+<div class="card shadow">
+<div class="card-body p-4">
+<h3 class="mb-3">Tips membuat laporan</h3>
+<div class="soft-card mb-3">
+    <h5 class="mb-2">Judul singkat</h5>
+    <p class="mb-0">Gunakan judul yang langsung menjelaskan inti permasalahan.</p>
+</div>
+<div class="soft-card mb-3">
+    <h5 class="mb-2">Deskripsi jelas</h5>
+    <p class="mb-0">Tuliskan kondisi lapangan secara ringkas namun cukup informatif.</p>
+</div>
+<div class="soft-card">
+    <h5 class="mb-2">Lokasi tepat</h5>
+    <p class="mb-0">Masukkan lokasi yang spesifik agar penanganan lebih mudah dilakukan.</p>
+</div>
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body p-4">
+<h3 class="mb-3">Setelah dikirim</h3>
+<p class="mb-0">
+Laporan akan masuk ke daftar reports, lalu dapat melalui tahapan reported, verified, in progress, hingga resolved.
+</p>
+</div>
+</div>
 </div>
 </div>
 

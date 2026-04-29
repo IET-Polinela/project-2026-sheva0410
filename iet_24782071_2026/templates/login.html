@@ -2,36 +2,60 @@
 
 {% block content %}
 
-<div class="row justify-content-center">
-    <div class="col-md-4">
+<div class="page-shell page-shell-two">
+    <div class="card shadow">
+        <div class="card-body p-4 p-lg-5">
+            <h2 class="mb-3">Masuk ke akun Anda</h2>
+            <p class="section-intro">
+                Gunakan akun Anda untuk membuat laporan baru, memantau status penanganan, dan mengelola aktivitas pelaporan.
+            </p>
 
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label>Username</label>
+                    {{ form.username }}
+                </div>
+
+                <div class="mb-4">
+                    <label>Password</label>
+                    {{ form.password }}
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="section-stack">
         <div class="card shadow">
-            <div class="card-body">
-
-                <h3 class="text-center mb-4">Login</h3>
-
-                <form method="POST">
-                    {% csrf_token %}
-
-                    <div class="mb-3">
-                        <label>Username</label>
-                        {{ form.username }}
-                    </div>
-
-                    <div class="mb-3">
-                        <label>Password</label>
-                        {{ form.password }}
-                    </div>
-
-                    <button class="btn btn-primary w-100">
-                        Login
-                    </button>
-
-                </form>
-
+            <div class="card-body p-4">
+                <h3 class="mb-3">Yang bisa Anda lakukan</h3>
+                <div class="soft-card mb-3">
+                    <h5 class="mb-2">Buat laporan cepat</h5>
+                    <p class="mb-0">Laporkan permasalahan kota langsung dari dashboard pelaporan.</p>
+                </div>
+                <div class="soft-card mb-3">
+                    <h5 class="mb-2">Pantau status</h5>
+                    <p class="mb-0">Lihat perkembangan laporan dari reported sampai resolved.</p>
+                </div>
+                <div class="soft-card">
+                    <h5 class="mb-2">Kelola data</h5>
+                    <p class="mb-0">Edit detail laporan atau lengkapi informasi bila diperlukan.</p>
+                </div>
             </div>
         </div>
-
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="mb-3">Akses yang aman</h3>
+                <p class="mb-0">
+                    Antarmuka dibuat sederhana agar proses login cepat dipahami dan nyaman dipakai di berbagai perangkat.
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 

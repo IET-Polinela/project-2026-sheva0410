@@ -4,15 +4,19 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+
 from .models import Report
 
 
+# LIST VIEW
 class ReportListView(LoginRequiredMixin, ListView):
     model = Report
     template_name = 'main_app/reports.html'
     context_object_name = 'reports'
 
 
+# DETAIL VIEW
 class ReportDetailView(LoginRequiredMixin, DetailView):
     model = Report
     template_name = 'main_app/detail.html'
@@ -66,12 +70,14 @@ class ReportDeleteView(LoginRequiredMixin, DeleteView):
             return redirect('report_list')
         return super().dispatch(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "Laporan berhasil dihapus!")
-        return super().delete(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        report = self.get_object()
+        report.delete()
+        messages.success(request, "Laporan berhasil dihapus.")
+        return redirect(self.success_url)
 
 
-# UPDATE STATUS (DENGAN WORKFLOW AMAN)
+# UPDATE STATUS (WORKFLOW)
 class ReportUpdateStatusView(LoginRequiredMixin, View):
     def post(self, request, pk):
         if not request.user.is_admin:
@@ -98,3 +104,31 @@ class ReportUpdateStatusView(LoginRequiredMixin, View):
 
         messages.success(request, "Status berhasil diubah!")
         return redirect('report_list')
+
+
+# LIVE SEARCH (AJAX)
+class ReportSearchView(View):
+    def get(self, request):
+        query = request.GET.get('q', '')
+
+        reports = Report.objects.filter(
+            title__icontains=query
+        ).values('id', 'title', 'location', 'status')
+
+        return JsonResponse(list(reports), safe=False)
+
+
+# DETAIL API (UNTUK MODAL)
+class ReportDetailAPIView(View):
+    def get(self, request, pk):
+        report = get_object_or_404(Report, pk=pk)
+
+        data = {
+            'title': report.title,
+            'category': report.category,
+            'description': report.description,
+            'location': report.location,
+            'status': report.status,
+        }
+
+        return JsonResponse(data)

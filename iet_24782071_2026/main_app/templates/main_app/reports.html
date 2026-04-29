@@ -16,6 +16,8 @@
     </a>
 </div>
 
+<input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari laporan...">
+
 {% if reports %}
 <table class="table table-bordered table-striped table-hover">
 
@@ -28,61 +30,53 @@
         </tr>
     </thead>
 
-    <tbody>
+    <tbody id="reportTableBody">
         {% for report in reports %}
         <tr>
             <td>{{ report.title }}</td>
             <td>{{ report.location }}</td>
 
-            <!-- STATUS BADGE -->
             <td>
                 {% if report.status == 'REPORTED' %}
                     <span class="badge bg-secondary">Reported</span>
                 {% elif report.status == 'VERIFIED' %}
                     <span class="badge bg-info">Verified</span>
                 {% elif report.status == 'IN_PROGRESS' %}
-                    <span class="badge bg-warning text-dark">In Progress</span>
+                    <span class="badge bg-warning">In Progress</span>
                 {% elif report.status == 'RESOLVED' %}
                     <span class="badge bg-success">Resolved</span>
                 {% endif %}
             </td>
 
             <td>
-
-                <!-- WORKFLOW STATUS -->
                 <form method="POST" action="/update-status/{{ report.id }}/" style="display:inline;">
                     {% csrf_token %}
 
                     {% if report.status == 'REPORTED' %}
-                        <button class="btn btn-primary btn-sm" name="status" value="VERIFIED">
-                            Verifikasi
-                        </button>
-
+                        <button class="btn btn-primary btn-sm" name="status" value="VERIFIED">Verifikasi</button>
                     {% elif report.status == 'VERIFIED' %}
-                        <button class="btn btn-warning btn-sm" name="status" value="IN_PROGRESS">
-                            Proses
-                        </button>
-
+                        <button class="btn btn-warning btn-sm" name="status" value="IN_PROGRESS">Proses</button>
                     {% elif report.status == 'IN_PROGRESS' %}
-                        <button class="btn btn-success btn-sm" name="status" value="RESOLVED">
-                            Selesai
-                        </button>
+                        <button class="btn btn-success btn-sm" name="status" value="RESOLVED">Selesai</button>
                     {% endif %}
                 </form>
 
                 <br><br>
 
-                <!-- AKSI -->
-                <a href="/detail/{{ report.id }}/" class="btn btn-outline-primary btn-sm">Detail</a>
-                <a href="/update/{{ report.id }}/" class="btn btn-outline-warning btn-sm">Edit</a>
+                <button type="button" class="btn btn-sm action-btn action-btn-detail detail-btn" data-id="{{ report.id }}">
+                    <i class="bi bi-eye"></i> Detail
+                </button>
+
+                <a href="/update/{{ report.id }}/" class="btn btn-sm action-btn action-btn-edit">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a>
 
                 <form method="POST" action="/delete/{{ report.id }}/" style="display:inline;">
                     {% csrf_token %}
-                    <button class="btn btn-outline-danger btn-sm">
-                        Hapus
+                    <button class="btn btn-sm action-btn action-btn-delete">
+                        <i class="bi bi-trash3"></i> Hapus
                     </button>
                 </form>
-
             </td>
         </tr>
         {% endfor %}
@@ -91,10 +85,200 @@
 </table>
 
 {% else %}
-<div class="alert alert-info text-center">
+<div class="alert alert-info empty-state-alert text-center">
     <h5>Belum ada laporan</h5>
+    <p>Data laporan masih kosong. Anda bisa mulai menambahkan laporan baru agar daftar dan dashboard mulai terisi.</p>
     <a href="/create/" class="btn btn-primary mt-2">Tambah Laporan</a>
 </div>
 {% endif %}
+
+<div id="detailModal" class="app-modal" hidden>
+    <div class="app-modal-backdrop" data-close="modal"></div>
+    <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+        <div class="app-modal-header">
+            <h5 id="detailModalTitle" class="modal-title mb-0">Detail Laporan</h5>
+            <button type="button" id="detailModalClose" class="modal-dismiss-btn" aria-label="Close">X</button>
+        </div>
+
+        <div class="app-modal-body" id="modalBody">
+            Loading...
+        </div>
+    </div>
+</div>
+
+<script>
+function renderStatusBadge(status) {
+    if (status === 'REPORTED') {
+        return '<span class="badge bg-secondary">Reported</span>';
+    }
+
+    if (status === 'VERIFIED') {
+        return '<span class="badge bg-info">Verified</span>';
+    }
+
+    if (status === 'IN_PROGRESS') {
+        return '<span class="badge bg-warning">In Progress</span>';
+    }
+
+    if (status === 'RESOLVED') {
+        return '<span class="badge bg-success">Resolved</span>';
+    }
+
+    return `<span class="badge bg-secondary">${status}</span>`;
+}
+
+const searchInput = document.getElementById('searchInput');
+const detailModalElement = document.getElementById('detailModal');
+const detailModalClose = document.getElementById('detailModalClose');
+const modalBody = document.getElementById('modalBody');
+const reportTableBody = document.getElementById('reportTableBody');
+const initialTableMarkup = reportTableBody ? reportTableBody.innerHTML : '';
+const csrfToken = '{{ csrf_token }}';
+
+function showDetailModal() {
+    detailModalElement.hidden = false;
+    document.body.classList.add('app-modal-open');
+}
+
+function hideDetailModal() {
+    detailModalElement.hidden = true;
+    document.body.classList.remove('app-modal-open');
+}
+
+function renderWorkflowButton(report) {
+    if (report.status === 'REPORTED') {
+        return `
+            <form method="POST" action="/update-status/${report.id}/" style="display:inline;">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                <button class="btn btn-primary btn-sm" name="status" value="VERIFIED">Verifikasi</button>
+            </form>
+        `;
+    }
+
+    if (report.status === 'VERIFIED') {
+        return `
+            <form method="POST" action="/update-status/${report.id}/" style="display:inline;">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                <button class="btn btn-warning btn-sm" name="status" value="IN_PROGRESS">Proses</button>
+            </form>
+        `;
+    }
+
+    if (report.status === 'IN_PROGRESS') {
+        return `
+            <form method="POST" action="/update-status/${report.id}/" style="display:inline;">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                <button class="btn btn-success btn-sm" name="status" value="RESOLVED">Selesai</button>
+            </form>
+        `;
+    }
+
+    return '';
+}
+
+function renderActionButtons(report) {
+    return `
+        ${renderWorkflowButton(report)}
+        <br><br>
+        <button type="button" class="btn btn-sm action-btn action-btn-detail detail-btn" data-id="${report.id}">
+            <i class="bi bi-eye"></i> Detail
+        </button>
+        <a href="/update/${report.id}/" class="btn btn-sm action-btn action-btn-edit">
+            <i class="bi bi-pencil-square"></i> Edit
+        </a>
+        <form method="POST" action="/delete/${report.id}/" style="display:inline;">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+            <button class="btn btn-sm action-btn action-btn-delete">
+                <i class="bi bi-trash3"></i> Hapus
+            </button>
+        </form>
+    `;
+}
+
+function renderReportRow(report) {
+    return `
+        <tr>
+            <td>${report.title}</td>
+            <td>${report.location}</td>
+            <td>${renderStatusBadge(report.status)}</td>
+            <td>${renderActionButtons(report)}</td>
+        </tr>
+    `;
+}
+
+searchInput.addEventListener('input', function () {
+    const query = this.value.trim();
+
+    if (!reportTableBody) {
+        return;
+    }
+
+    if (!query) {
+        reportTableBody.innerHTML = initialTableMarkup;
+        return;
+    }
+
+    fetch(`/search/?q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+            reportTableBody.innerHTML = data.map(renderReportRow).join('');
+
+            if (!data.length) {
+                reportTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-4">Tidak ada laporan yang cocok dengan pencarian Anda.</td>
+                    </tr>
+                `;
+            }
+        });
+});
+
+detailModalClose.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    hideDetailModal();
+});
+
+document.addEventListener('click', function (event) {
+    const detailButton = event.target.closest('.detail-btn');
+    const modalBackdrop = event.target.closest('[data-close="modal"]');
+
+    if (modalBackdrop) {
+        hideDetailModal();
+        return;
+    }
+
+    if (!detailButton) {
+        return;
+    }
+
+    const id = detailButton.dataset.id;
+    modalBody.innerHTML = 'Loading...';
+
+    fetch(`/api/detail/${id}/`)
+        .then(res => res.json())
+        .then(data => {
+            modalBody.innerHTML = `
+                <p><b>Judul:</b> ${data.title}</p>
+                <p><b>Kategori:</b> ${data.category}</p>
+                <p><b>Deskripsi:</b> ${data.description}</p>
+                <p><b>Lokasi:</b> ${data.location}</p>
+                <p><b>Status:</b> ${renderStatusBadge(data.status)}</p>
+            `;
+
+            showDetailModal();
+        })
+        .catch(() => {
+            modalBody.innerHTML = '<p>Detail laporan tidak dapat dimuat saat ini.</p>';
+            showDetailModal();
+        });
+});
+
+document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !detailModalElement.hidden) {
+        hideDetailModal();
+    }
+});
+</script>
 
 {% endblock %}

@@ -5,17 +5,20 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # DASHBOARD (TAMBAHKAN INI)
+    path('', include('dashboard_24782071.urls')),
+
     path('', include('main_app.urls')),
     path('about/', include('about.urls')),
     path('contacts/', include('contacts.urls')),
 
-    #  USER MANAGEMENT (REGISTER)
+    # USER MANAGEMENT
     path('', include('usermanagement_24782071.urls')),
 
-    #  LOGIN
+    # LOGIN
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
 
-    # LOGOUT → BALIK KE HOME
+    # LOGOUT
     path(
         'logout/',
         auth_views.LogoutView.as_view(

@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <h2 class="mb-4 fw-bold">Dashboard Smart City</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5>Status Laporan</h5>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5>Kategori Laporan</h5>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>5 Laporan Terbaru (Reported)</h5>
+                    <ul id="latestReported" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5>5 Laporan Selesai (Resolved)</h5>
+                    <ul id="latestResolved" class="list-group"></ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 🔥 CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const chartTextColor = '#f7f4ff';
+    const chartGridColor = 'rgba(205, 191, 244, 0.14)';
+
+    Chart.defaults.color = chartTextColor;
+    Chart.defaults.borderColor = chartGridColor;
+
+    fetch('/dashboard-data/')
+        .then(response => response.json())
+        .then(data => {
+
+            console.log("DATA:", data); //  
+
+            // STATUS CHART 
+            const statusLabels = data.status.map(x => x.status);
+            const statusValues = data.status.map(x => x.total);
+
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusValues,
+                        backgroundColor: [
+                            '#7b6dff', // reported
+                            '#9f86ff', // verified
+                            '#d4b9ff', // progress
+                            '#b084ff'  // resolved
+                        ],
+                        borderColor: 'rgba(24, 18, 37, 0.95)',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: chartTextColor
+                            }
+                        }
+                    }
+                }
+            });
+
+            //  CATEGORY CHART 
+            const categoryLabels = data.category.map(x => x.category);
+            const categoryValues = data.category.map(x => x.total);
+
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'bar',
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        label: 'Jumlah',
+                        data: categoryValues,
+                        backgroundColor: [
+                            '#8d63ff',
+                            '#a783ff',
+                            '#c4a5ff',
+                            '#9d75ff',
+                            '#7150d4',
+                            '#d8c2ff'
+                        ],
+                        borderRadius: 10,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: chartTextColor
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: chartTextColor
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: chartTextColor,
+                                precision: 0
+                            },
+                            grid: {
+                                color: chartGridColor
+                            }
+                        }
+                    }
+                }
+            });
+
+            //  LIST REPORTED 
+            const reportedList = document.getElementById('latestReported');
+            data.latest_reported.forEach(item => {
+                reportedList.innerHTML += `
+                    <li class="list-group-item">
+                        ${item.title}
+                    </li>
+                `;
+            });
+
+            //  LIST RESOLVED 
+            const resolvedList = document.getElementById('latestResolved');
+            data.latest_resolved.forEach(item => {
+                resolvedList.innerHTML += `
+                    <li class="list-group-item">
+                        ${item.title}
+                    </li>
+                `;
+            });
+
+        })
+        .catch(error => console.error(error));
+
+});
+</script>
+
+{% endblock %}
