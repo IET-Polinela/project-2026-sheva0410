@@ -50,16 +50,11 @@
 
 </div>
 
-<!-- 🔥 CHART JS -->
+<!--  CHART JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const chartTextColor = '#f7f4ff';
-    const chartGridColor = 'rgba(205, 191, 244, 0.14)';
-
-    Chart.defaults.color = chartTextColor;
-    Chart.defaults.borderColor = chartGridColor;
 
     fetch('/dashboard-data/')
         .then(response => response.json())
@@ -78,23 +73,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     datasets: [{
                         data: statusValues,
                         backgroundColor: [
-                            '#7b6dff', // reported
-                            '#9f86ff', // verified
-                            '#d4b9ff', // progress
-                            '#b084ff'  // resolved
-                        ],
-                        borderColor: 'rgba(24, 18, 37, 0.95)',
-                        borderWidth: 3
+                            '#6c757d', // reported
+                            '#0dcaf0', // verified
+                            '#ffc107', // progress
+                            '#198754'  // resolved
+                        ]
                     }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: chartTextColor
-                            }
-                        }
-                    }
                 }
             });
 
@@ -109,46 +93,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     datasets: [{
                         label: 'Jumlah',
                         data: categoryValues,
-                        backgroundColor: [
-                            '#8d63ff',
-                            '#a783ff',
-                            '#c4a5ff',
-                            '#9d75ff',
-                            '#7150d4',
-                            '#d8c2ff'
-                        ],
-                        borderRadius: 10,
-                        borderSkipped: false
+                        backgroundColor: '#0d6efd'
                     }]
-                },
-                options: {
-                    plugins: {
-                        legend: {
-                            labels: {
-                                color: chartTextColor
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            ticks: {
-                                color: chartTextColor
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0)'
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: chartTextColor,
-                                precision: 0
-                            },
-                            grid: {
-                                color: chartGridColor
-                            }
-                        }
-                    }
                 }
             });
 
