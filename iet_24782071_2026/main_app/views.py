@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from django.db.models import Q
 
 from .models import Report
 
@@ -14,6 +15,43 @@ class ReportListView(LoginRequiredMixin, ListView):
     model = Report
     template_name = 'main_app/reports.html'
     context_object_name = 'reports'
+
+    def get_queryset(self):
+        queryset = Report.objects.all().order_by('-created_at')
+
+        query = self.request.GET.get('q', '').strip()
+        status = self.request.GET.get('status', '').strip()
+        category = self.request.GET.get('category', '').strip()
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(location__icontains=query) |
+                Q(category__icontains=query)
+            )
+
+        if status:
+            queryset = queryset.filter(status=status)
+
+        if category:
+            queryset = queryset.filter(category=category)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['status_choices'] = Report._meta.get_field('status').choices
+        context['category_choices'] = (
+            Report.objects.order_by('category')
+            .values_list('category', flat=True)
+            .distinct()
+        )
+        context['filters'] = {
+            'q': self.request.GET.get('q', '').strip(),
+            'status': self.request.GET.get('status', '').strip(),
+            'category': self.request.GET.get('category', '').strip(),
+        }
+        return context
 
 
 # DETAIL VIEW
@@ -109,11 +147,26 @@ class ReportUpdateStatusView(LoginRequiredMixin, View):
 # LIVE SEARCH (AJAX)
 class ReportSearchView(View):
     def get(self, request):
-        query = request.GET.get('q', '')
+        query = request.GET.get('q', '').strip()
+        status = request.GET.get('status', '').strip()
+        category = request.GET.get('category', '').strip()
 
-        reports = Report.objects.filter(
-            title__icontains=query
-        ).values('id', 'title', 'location', 'status')
+        reports = Report.objects.all().order_by('-created_at')
+
+        if query:
+            reports = reports.filter(
+                Q(title__icontains=query) |
+                Q(location__icontains=query) |
+                Q(category__icontains=query)
+            )
+
+        if status:
+            reports = reports.filter(status=status)
+
+        if category:
+            reports = reports.filter(category=category)
+
+        reports = reports.values('id', 'title', 'location', 'status')
 
         return JsonResponse(list(reports), safe=False)
 

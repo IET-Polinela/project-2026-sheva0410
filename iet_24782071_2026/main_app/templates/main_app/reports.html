@@ -16,9 +16,51 @@
     </a>
 </div>
 
-<input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari laporan...">
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-5">
+                <label for="searchInput" class="form-label">Cari Laporan</label>
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control"
+                    placeholder="Cari judul laporan..."
+                    value="{{ filters.q }}"
+                >
+            </div>
 
-{% if reports %}
+            <div class="col-md-3">
+                <label for="statusFilter" class="form-label">Status</label>
+                <select id="statusFilter" class="form-select">
+                    <option value="">Semua status</option>
+                    {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if filters.status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="categoryFilter" class="form-label">Kategori</label>
+                <select id="categoryFilter" class="form-select">
+                    <option value="">Semua kategori</option>
+                    {% for category in category_choices %}
+                    <option value="{{ category }}" {% if filters.category == category %}selected{% endif %}>{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-1 d-grid">
+                <button type="button" id="resetFilters" class="btn btn-outline-secondary">Reset</button>
+            </div>
+        </div>
+
+        <p class="text-muted small mb-0 mt-3">
+            Gunakan filter untuk mempermudah pembaca menemukan laporan berdasarkan status dan kategori.
+        </p>
+    </div>
+</div>
+
 <table class="table table-bordered table-striped table-hover">
 
     <thead class="table-dark">
@@ -31,6 +73,7 @@
     </thead>
 
     <tbody id="reportTableBody">
+        {% if reports %}
         {% for report in reports %}
         <tr>
             <td>{{ report.title }}</td>
@@ -80,17 +123,14 @@
             </td>
         </tr>
         {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center py-4">Belum ada laporan yang sesuai dengan filter saat ini.</td>
+        </tr>
+        {% endif %}
     </tbody>
 
 </table>
-
-{% else %}
-<div class="alert alert-info empty-state-alert text-center">
-    <h5>Belum ada laporan</h5>
-    <p>Data laporan masih kosong. Anda bisa mulai menambahkan laporan baru agar daftar dan dashboard mulai terisi.</p>
-    <a href="/create/" class="btn btn-primary mt-2">Tambah Laporan</a>
-</div>
-{% endif %}
 
 <div id="detailModal" class="app-modal" hidden>
     <div class="app-modal-backdrop" data-close="modal"></div>
@@ -128,12 +168,44 @@ function renderStatusBadge(status) {
 }
 
 const searchInput = document.getElementById('searchInput');
+const statusFilter = document.getElementById('statusFilter');
+const categoryFilter = document.getElementById('categoryFilter');
+const resetFiltersButton = document.getElementById('resetFilters');
 const detailModalElement = document.getElementById('detailModal');
 const detailModalClose = document.getElementById('detailModalClose');
 const modalBody = document.getElementById('modalBody');
 const reportTableBody = document.getElementById('reportTableBody');
-const initialTableMarkup = reportTableBody ? reportTableBody.innerHTML : '';
 const csrfToken = '{{ csrf_token }}';
+
+function getActiveFilters() {
+    return {
+        q: searchInput.value.trim(),
+        status: statusFilter.value,
+        category: categoryFilter.value
+    };
+}
+
+function updateUrlParams(filters) {
+    const params = new URLSearchParams();
+
+    if (filters.q) {
+        params.set('q', filters.q);
+    }
+
+    if (filters.status) {
+        params.set('status', filters.status);
+    }
+
+    if (filters.category) {
+        params.set('category', filters.category);
+    }
+
+    const nextUrl = params.toString()
+        ? `${window.location.pathname}?${params.toString()}`
+        : window.location.pathname;
+
+    window.history.replaceState({}, '', nextUrl);
+}
 
 function showDetailModal() {
     detailModalElement.hidden = false;
@@ -206,31 +278,55 @@ function renderReportRow(report) {
     `;
 }
 
-searchInput.addEventListener('input', function () {
-    const query = this.value.trim();
+function renderEmptyState(message) {
+    reportTableBody.innerHTML = `
+        <tr>
+            <td colspan="4" class="text-center py-4">${message}</td>
+        </tr>
+    `;
+}
 
+function applyFilters() {
     if (!reportTableBody) {
         return;
     }
 
-    if (!query) {
-        reportTableBody.innerHTML = initialTableMarkup;
-        return;
-    }
+    const filters = getActiveFilters();
+    const params = new URLSearchParams(filters);
+    updateUrlParams(filters);
 
-    fetch(`/search/?q=${encodeURIComponent(query)}`)
+    fetch(`/search/?${params.toString()}`)
         .then(res => res.json())
         .then(data => {
-            reportTableBody.innerHTML = data.map(renderReportRow).join('');
-
             if (!data.length) {
-                reportTableBody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="text-center py-4">Tidak ada laporan yang cocok dengan pencarian Anda.</td>
-                    </tr>
-                `;
+                renderEmptyState('Tidak ada laporan yang cocok dengan filter yang dipilih.');
+                return;
             }
+
+            reportTableBody.innerHTML = data.map(renderReportRow).join('');
+        })
+        .catch(() => {
+            renderEmptyState('Data laporan tidak dapat dimuat saat ini.');
         });
+}
+
+searchInput.addEventListener('input', function () {
+    applyFilters();
+});
+
+statusFilter.addEventListener('change', function () {
+    applyFilters();
+});
+
+categoryFilter.addEventListener('change', function () {
+    applyFilters();
+});
+
+resetFiltersButton.addEventListener('click', function () {
+    searchInput.value = '';
+    statusFilter.value = '';
+    categoryFilter.value = '';
+    applyFilters();
 });
 
 detailModalClose.addEventListener('click', function (event) {
