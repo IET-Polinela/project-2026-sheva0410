@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'contacts',
     'usermanagement_24782071',
     'dashboard_24782071',
+    'rest_framework',
 ]
 
 
