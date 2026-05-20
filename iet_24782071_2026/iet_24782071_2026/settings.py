@@ -28,7 +28,9 @@ INSTALLED_APPS = [
     'contacts',
     'usermanagement_24782071',
     'dashboard_24782071',
+
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 
@@ -36,7 +38,6 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'usermanagement_24782071.User'
 
 
-# LOGIN & LOGOUT REDIRECT 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
@@ -92,7 +93,6 @@ DATABASES = {
 }
 
 
-# PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,16 +109,26 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# INTERNATIONALIZATION
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
 
-# STATIC FILES
 STATIC_URL = 'static/'
 
 
-# DEFAULT PRIMARY KEY
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
