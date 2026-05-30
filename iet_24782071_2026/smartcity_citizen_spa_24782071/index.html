@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Warga - Smart City Tracker</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(139, 92, 246, 0.35), transparent 30%),
+                linear-gradient(135deg, #12091f, #24113a, #0f0718);
+            color: #f8f9fa;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(90deg, #4c1d95, #7c3aed, #8b5cf6);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .spa-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8f9fa;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-card {
+            background: linear-gradient(135deg, #3b1b63, #6d28d9, #a78bfa);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .btn-purple {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+        }
+
+        .btn-purple:hover {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .form-control {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .text-soft {
+            color: rgba(255, 255, 255, 0.75);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
+        <div class="container px-4">
+
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-buildings-fill me-2"></i>
+                Smart City
+            </a>
+
+            <div id="nav-menu" class="ms-auto"></div>
+
+        </div>
+    </nav>
+
+    <main class="container px-4 mt-4 spa-container" id="app-content"></main>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/router.js"></script>
+
+</body>
+</html>
