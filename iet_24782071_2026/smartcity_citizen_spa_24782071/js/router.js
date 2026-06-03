@@ -36,6 +36,80 @@ const routes = {
 
                 </form>
 
+                <div class="text-center mt-3">
+                    <span class="text-soft">Belum punya akun?</span>
+
+                    <button
+                        class="btn btn-link text-white fw-semibold p-0 ms-1"
+                        type="button"
+                        onclick="window.location.hash='#register'"
+                    >
+                        Daftar
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    `,
+
+
+    '#register': `
+        <div class="row justify-content-center mt-5">
+
+            <div class="col-12 col-md-5 col-lg-4 spa-card card shadow-lg p-4 rounded-4">
+
+                <div class="text-center mb-4">
+                    <i class="bi bi-person-plus-fill fs-1 text-soft"></i>
+                    <h3 class="fw-bold mt-2">Register Warga</h3>
+                    <p class="text-soft mb-0">Buat akun Citizen baru</p>
+                </div>
+
+                <form id="registerForm">
+
+                    <input
+                        type="text"
+                        id="registerUsername"
+                        class="form-control mb-3"
+                        placeholder="Username"
+                        required
+                    >
+
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        class="form-control mb-3"
+                        placeholder="Email"
+                        required
+                    >
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        class="form-control mb-3"
+                        placeholder="Password"
+                        required
+                    >
+
+                    <button type="submit" class="btn btn-purple w-100 fw-semibold">
+                        <i class="bi bi-person-check-fill me-2"></i>
+                        Daftar
+                    </button>
+
+                </form>
+
+                <div class="text-center mt-3">
+                    <span class="text-soft">Sudah punya akun?</span>
+
+                    <button
+                        class="btn btn-link text-white fw-semibold p-0 ms-1"
+                        type="button"
+                        onclick="window.location.hash='#login'"
+                    >
+                        Login
+                    </button>
+                </div>
+
             </div>
 
         </div>
@@ -199,6 +273,15 @@ function handleRouting() {
 
         if (typeof setupLoginForm === 'function') {
             setupLoginForm();
+        }
+
+    }
+
+
+    if (hash === '#register') {
+
+        if (typeof setupRegisterForm === 'function') {
+            setupRegisterForm();
         }
 
     }
