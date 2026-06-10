@@ -1,5 +1,5 @@
 """
-Django settings for npm_iet_2026 project.
+Django settings for smartcity_app project.
 """
 
 from pathlib import Path
@@ -11,11 +11,13 @@ SECRET_KEY = 'django-insecure-m4arej!@fg)#sz698%uayxdgl=9i9yn$9799+u0bia=4vx__ga
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # APPLICATION
 INSTALLED_APPS = [
+    'corsheaders',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,7 +33,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
-    'corsheaders',
 ]
 
 
@@ -58,14 +59,13 @@ MIDDLEWARE = [
 ]
 
 
-ROOT_URLCONF = 'iet_24782071_2026.urls'
+ROOT_URLCONF = 'smartcity_app.urls'
 
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
 
-        # GLOBAL TEMPLATE
         'DIRS': [BASE_DIR / 'templates'],
 
         'APP_DIRS': True,
@@ -80,7 +80,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'iet_24782071_2026.wsgi.application'
+WSGI_APPLICATION = 'smartcity_app.wsgi.application'
 
 
 # DATABASE (POSTGRESQL)
@@ -119,6 +119,7 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
