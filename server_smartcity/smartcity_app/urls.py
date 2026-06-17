@@ -7,11 +7,42 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
+
+from django_scalar.views import scalar_viewer
+
 
 urlpatterns = [
 
     # ADMIN
     path('admin/', admin.site.urls),
+
+
+    # OPENAPI SCHEMA
+    path(
+        'api/schema/',
+        SpectacularAPIView.as_view(),
+        name='schema'
+    ),
+
+
+    # SWAGGER UI
+    path(
+        'api/docs/swagger/',
+        SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger-ui'
+    ),
+
+
+    # SCALAR UI
+    path(
+        'api/docs/scalar/',
+        scalar_viewer,
+        name='scalar-ui'
+    ),
 
 
     # JWT TOKEN
@@ -36,27 +67,45 @@ urlpatterns = [
 
 
     # API DRF
-    path('api/', include('main_app.api_urls')),
+    path(
+        'api/',
+        include('main_app.api_urls')
+    ),
 
 
     # DASHBOARD
-    path('', include('dashboard_24782071.urls')),
+    path(
+        '',
+        include('dashboard_24782071.urls')
+    ),
 
 
     # MAIN APP
-    path('', include('main_app.urls')),
+    path(
+        '',
+        include('main_app.urls')
+    ),
 
 
     # ABOUT
-    path('about/', include('about.urls')),
+    path(
+        'about/',
+        include('about.urls')
+    ),
 
 
     # CONTACTS
-    path('contacts/', include('contacts.urls')),
+    path(
+        'contacts/',
+        include('contacts.urls')
+    ),
 
 
     # USER MANAGEMENT
-    path('', include('usermanagement_24782071.urls')),
+    path(
+        '',
+        include('usermanagement_24782071.urls')
+    ),
 
 
     # LOGIN
