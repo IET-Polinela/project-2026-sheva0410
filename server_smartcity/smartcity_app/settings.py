@@ -25,14 +25,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Aplikasi project
     'main_app',
     'about',
     'contacts',
     'usermanagement_24782071',
     'dashboard_24782071',
 
+    # Django REST Framework
     'rest_framework',
     'rest_framework_simplejwt',
+
+    # OpenAPI Documentation
+    'drf_spectacular',
+    'django_scalar',
 ]
 
 
@@ -69,6 +75,7 @@ TEMPLATES = [
         'DIRS': [BASE_DIR / 'templates'],
 
         'APP_DIRS': True,
+
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -125,22 +132,65 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+# DJANGO REST FRAMEWORK CONFIGURATION
 REST_FRAMEWORK = {
+    # Schema generator untuk OpenAPI 3.0
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    # Renderer API
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
 
+    # Autentikasi JWT
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
 
+# OPENAPI / SWAGGER / SCALAR SETTINGS
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Smart City Portal API',
+    'DESCRIPTION': 'Dokumentasi REST API resmi untuk Portal Pelaporan Laporan Warga',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+
+    # Membantu pemisahan request dan response schema
+    'COMPONENT_SPLIT_REQUEST': True,
+
+    # Konfigurasi Bearer Token agar tombol Authorize/gembok muncul di Swagger UI
+    'SECURITY': [
+        {
+            'BearerAuth': []
+        }
+    ],
+
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'BearerAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+                'description': 'Masukkan token dengan format: Bearer <access_token>',
+            }
+        }
+    },
+
+    # Agar token tidak hilang saat halaman Swagger direfresh
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,
+    },
+}
+
+
 # CORS SETTINGS
 CORS_ALLOW_ALL_ORIGINS = True
 
+
+# CSRF SETTINGS
 CSRF_TRUSTED_ORIGINS = [
-    "http://103.151.63.87:8005",
+    'http://103.151.63.87:8005',
+    'https://iet-polinela.github.io',
 ]
-CSRF_TRUSTED_ORIGINS = ['http://103.151.63.87:8005']
