@@ -32,7 +32,7 @@
             <div class="card shadow">
                 <div class="card-body">
                     <h5>5 Laporan Terbaru (Reported)</h5>
-                    <ul id="latestReported" class="list-group"></ul>
+                    <ul id="reportedTable" class="list-group"></ul>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
             <div class="card shadow">
                 <div class="card-body">
                     <h5>5 Laporan Selesai (Resolved)</h5>
-                    <ul id="latestResolved" class="list-group"></ul>
+                    <ul id="resolvedTable" class="list-group"></ul>
                 </div>
             </div>
         </div>
@@ -99,24 +99,36 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             //  LIST REPORTED 
-            const reportedList = document.getElementById('latestReported');
-            data.latest_reported.forEach(item => {
-                reportedList.innerHTML += `
-                    <li class="list-group-item">
-                        ${item.title}
-                    </li>
+            const reportedList = document.getElementById('reportedTable');
+            if (!data.latest_reported || data.latest_reported.length === 0) {
+                reportedList.innerHTML = `
+                    <li class="list-group-item text-muted">Belum ada laporan.</li>
                 `;
-            });
+            } else {
+                data.latest_reported.forEach(item => {
+                    reportedList.innerHTML += `
+                        <li class="list-group-item">
+                            ${item.title}
+                        </li>
+                    `;
+                });
+            }
 
             //  LIST RESOLVED 
-            const resolvedList = document.getElementById('latestResolved');
-            data.latest_resolved.forEach(item => {
-                resolvedList.innerHTML += `
-                    <li class="list-group-item">
-                        ${item.title}
-                    </li>
+            const resolvedList = document.getElementById('resolvedTable');
+            if (!data.latest_resolved || data.latest_resolved.length === 0) {
+                resolvedList.innerHTML = `
+                    <li class="list-group-item text-muted">Belum ada laporan.</li>
                 `;
-            });
+            } else {
+                data.latest_resolved.forEach(item => {
+                    resolvedList.innerHTML += `
+                        <li class="list-group-item">
+                            ${item.title}
+                        </li>
+                    `;
+                });
+            }
 
         })
         .catch(error => console.error(error));

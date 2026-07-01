@@ -1,4 +1,4 @@
-const BASE_URL = 'http://103.151.63.87:8005';
+const BASE_URL = 'http://localhost:8000';
 
 async function requestAPI(endpoint, method = 'GET', bodyData = null) {
 
@@ -28,6 +28,14 @@ async function requestAPI(endpoint, method = 'GET', bodyData = null) {
     }
 
     const response = await fetch(finalURL, config);
+
+    // INTERCEPTOR 401: token invalid/expired -> bersihkan sesi & redirect login
+    if (response.status === 401) {
+        alert('Sesi Anda telah habis atau Anda belum login.');
+        localStorage.clear();
+        window.location.hash = '#login';
+        return { status: 401, data: null };
+    }
 
     const data = await response.json();
 

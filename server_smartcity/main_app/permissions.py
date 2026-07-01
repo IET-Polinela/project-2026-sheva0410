@@ -11,6 +11,9 @@ class IsOwnerDraftOrAdminStatusOnly(permissions.BasePermission):
         if user.is_admin:
             return True
 
+        if view.action == 'submit':
+            return obj.reporter == user
+
         return (
             obj.reporter == user
             and obj.status == 'DRAFT'

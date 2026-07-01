@@ -11,23 +11,13 @@ function getStatusLabel(status) {
         'IN_PROGRESS': 'Diproses',
         'RESOLVED': 'Selesai'
     };
-
     return labels[status] || status;
 }
 
-
 function getProgress(status) {
-    const progress = {
-        'DRAFT': 20,
-        'REPORTED': 40,
-        'VERIFIED': 60,
-        'IN_PROGRESS': 80,
-        'RESOLVED': 100
-    };
-
+    const progress = { 'DRAFT': 20, 'REPORTED': 40, 'VERIFIED': 60, 'IN_PROGRESS': 80, 'RESOLVED': 100 };
     return progress[status] || 0;
 }
-
 
 function getProgressClass(status) {
     if (status === 'RESOLVED') return 'bg-success';
@@ -42,14 +32,10 @@ async function loadDashboardData(tab = currentTab, page = 1) {
     currentTab = tab;
     currentPage = page;
 
-    const response = await requestAPI(
-        `/api/report/?tab=${tab}&page=${page}`,
-        'GET'
-    );
+    const response = await requestAPI(`/api/report/?tab=${tab}&page=${page}`, 'GET');
 
     if (response.status === 200) {
         const paginatedData = response.data;
-
         renderList(paginatedData.results);
         renderPagination(paginatedData);
         loadSummaryStats();
@@ -60,7 +46,7 @@ async function loadDashboardData(tab = currentTab, page = 1) {
 
 
 function renderList(reports) {
-    const container = document.getElementById('reportListContainer');
+    const container = document.getElementById('listContainer');
 
     if (!reports || reports.length === 0) {
         container.innerHTML = `
@@ -80,20 +66,11 @@ function renderList(reports) {
         const actionButtons = report.status === 'DRAFT' && report.is_owner
             ? `
                 <div class="d-flex gap-2 mt-3">
-                    <button
-                        class="btn btn-sm btn-outline-light"
-                        onclick="editDraft(${report.id})"
-                        type="button"
-                    >
+                    <button class="btn btn-sm btn-outline-light" onclick="editDraft(${report.id})" type="button">
                         <i class="bi bi-pencil-square me-1"></i>
                         Edit
                     </button>
-
-                    <button
-                        class="btn btn-sm btn-purple"
-                        onclick="submitDraft(${report.id})"
-                        type="button"
-                    >
+                    <button class="btn btn-sm btn-purple" onclick="submitDraft(${report.id})" type="button">
                         <i class="bi bi-send-fill me-1"></i>
                         Ajukan
                     </button>
@@ -102,50 +79,30 @@ function renderList(reports) {
             : '';
 
         return `
-            <div class="spa-card card border-0 rounded-4 p-4 mb-3 shadow-sm">
-
+            <div class="col spa-card card border-0 rounded-4 p-4 mb-3 shadow-sm">
                 <div class="d-flex justify-content-between align-items-start gap-3">
-
                     <div>
-                        <h5 class="fw-bold mb-1">
-                            ${report.title}
-                        </h5>
-
+                        <h5 class="fw-bold mb-1">${report.title}</h5>
                         <div class="text-soft small mb-2">
                             <i class="bi bi-geo-alt me-1"></i>
                             ${report.location}
                         </div>
                     </div>
-
-                    <span class="badge bg-dark border">
-                        ${getStatusLabel(report.status)}
-                    </span>
-
+                    <span class="badge bg-dark border">${getStatusLabel(report.status)}</span>
                 </div>
-
-                <p class="text-soft mb-3">
-                    ${report.description}
-                </p>
-
+                <p class="text-soft mb-3">${report.description}</p>
                 <div class="small mb-2">
                     <i class="bi bi-tag me-1"></i>
                     ${report.category}
-
                     <span class="ms-2">
                         <i class="bi bi-person-circle me-1"></i>
                         ${report.reporter}
                     </span>
                 </div>
-
                 <div class="progress" style="height: 8px;">
-                    <div
-                        class="progress-bar ${progressClass}"
-                        style="width: ${progress}%"
-                    ></div>
+                    <div class="progress-bar ${progressClass}" style="width: ${progress}%"></div>
                 </div>
-
                 ${actionButtons}
-
             </div>
         `;
     }).join('');
@@ -160,39 +117,22 @@ function renderPagination(data) {
 
     container.innerHTML = `
         <div class="d-flex justify-content-center gap-2">
-
-            <button
-                class="btn btn-outline-light btn-sm"
-                ${previousDisabled}
-                onclick="loadDashboardData(currentTab, currentPage - 1)"
-                type="button"
-            >
+            <button class="page-item btn btn-outline-light btn-sm" ${previousDisabled} onclick="loadDashboardData(currentTab, currentPage - 1)" type="button">
                 Previous
             </button>
-
-            <span class="btn btn-purple btn-sm disabled">
+            <span class="page-item btn btn-purple btn-sm disabled">
                 Page ${currentPage}
             </span>
-
-            <button
-                class="btn btn-outline-light btn-sm"
-                ${nextDisabled}
-                onclick="loadDashboardData(currentTab, currentPage + 1)"
-                type="button"
-            >
+            <button class="page-item btn btn-outline-light btn-sm" ${nextDisabled} onclick="loadDashboardData(currentTab, currentPage + 1)" type="button">
                 Next
             </button>
-
         </div>
     `;
 }
 
 
 async function loadSummaryStats() {
-    const response = await requestAPI(
-        '/api/report/?tab=my_reports&page_size=1000',
-        'GET'
-    );
+    const response = await requestAPI('/api/report/?tab=my_reports&page_size=1000', 'GET');
 
     if (response.status !== 200) {
         return;
@@ -200,20 +140,11 @@ async function loadSummaryStats() {
 
     const reports = response.data.results;
 
-    document.getElementById('draftCount').innerText =
-        reports.filter(report => report.status === 'DRAFT').length;
-
-    document.getElementById('reportedCount').innerText =
-        reports.filter(report => report.status === 'REPORTED').length;
-
-    document.getElementById('verifiedCount').innerText =
-        reports.filter(report => report.status === 'VERIFIED').length;
-
-    document.getElementById('progressCount').innerText =
-        reports.filter(report => report.status === 'IN_PROGRESS').length;
-
-    document.getElementById('resolvedCount').innerText =
-        reports.filter(report => report.status === 'RESOLVED').length;
+    document.getElementById('draftCount').innerText = reports.filter(r => r.status === 'DRAFT').length;
+    document.getElementById('reportedCount').innerText = reports.filter(r => r.status === 'REPORTED').length;
+    document.getElementById('verifiedCount').innerText = reports.filter(r => r.status === 'VERIFIED').length;
+    document.getElementById('progressCount').innerText = reports.filter(r => r.status === 'IN_PROGRESS').length;
+    document.getElementById('resolvedCount').innerText = reports.filter(r => r.status === 'RESOLVED').length;
 }
 
 
@@ -227,19 +158,13 @@ function openCreateModal() {
 
     document.getElementById('reportForm').reset();
 
-    const modal = new bootstrap.Modal(
-        document.getElementById('reportModal')
-    );
-
+    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
     modal.show();
 }
 
 
 async function editDraft(id) {
-    const response = await requestAPI(
-        `/api/report/${id}/`,
-        'GET'
-    );
+    const response = await requestAPI(`/api/report/${id}/`, 'GET');
 
     if (response.status !== 200) {
         alert('Gagal mengambil data draft.');
@@ -247,7 +172,6 @@ async function editDraft(id) {
     }
 
     const report = response.data;
-
     editingReportId = id;
 
     document.getElementById('reportModalLabel').innerHTML = `
@@ -255,25 +179,22 @@ async function editDraft(id) {
         Edit Draft Laporan
     `;
 
-    document.getElementById('reportTitle').value = report.title;
-    document.getElementById('reportCategory').value = report.category;
-    document.getElementById('reportDescription').value = report.description;
-    document.getElementById('reportLocation').value = report.location;
+    document.getElementById('inputTitle').value = report.title;
+    document.getElementById('inputCategory').value = report.category;
+    document.getElementById('inputDescription').value = report.description;
+    document.getElementById('inputLocation').value = report.location;
 
-    const modal = new bootstrap.Modal(
-        document.getElementById('reportModal')
-    );
-
+    const modal = new bootstrap.Modal(document.getElementById('reportModal'));
     modal.show();
 }
 
 
 function getReportFormData() {
     return {
-        title: document.getElementById('reportTitle').value,
-        category: document.getElementById('reportCategory').value,
-        description: document.getElementById('reportDescription').value,
-        location: document.getElementById('reportLocation').value,
+        title: document.getElementById('inputTitle').value,
+        category: document.getElementById('inputCategory').value,
+        description: document.getElementById('inputDescription').value,
+        location: document.getElementById('inputLocation').value,
     };
 }
 
@@ -281,22 +202,13 @@ function getReportFormData() {
 async function saveDraft() {
     const bodyData = getReportFormData();
 
-    const endpoint = editingReportId
-        ? `/api/report/${editingReportId}/`
-        : '/api/report/';
-
+    const endpoint = editingReportId ? `/api/report/${editingReportId}/` : '/api/report/';
     const method = editingReportId ? 'PUT' : 'POST';
 
-    const response = await requestAPI(
-        endpoint,
-        method,
-        {
-            ...bodyData,
-            status: 'DRAFT'
-        }
-    );
+    const response = await requestAPI(endpoint, method, { ...bodyData, status: 'DRAFT' });
 
     if (response.status === 201 || response.status === 200) {
+        alert('Laporan berhasil disimpan sebagai DRAFT');
         closeReportModal();
         loadDashboardData(currentTab, currentPage);
     } else {
@@ -310,10 +222,7 @@ async function submitReport() {
         const saveResponse = await requestAPI(
             `/api/report/${editingReportId}/`,
             'PUT',
-            {
-                ...getReportFormData(),
-                status: 'DRAFT'
-            }
+            { ...getReportFormData(), status: 'DRAFT' }
         );
 
         if (saveResponse.status !== 200) {
@@ -326,15 +235,10 @@ async function submitReport() {
         return;
     }
 
-    const createResponse = await requestAPI(
-        '/api/report/',
-        'POST',
-        getReportFormData()
-    );
+    const createResponse = await requestAPI('/api/report/', 'POST', getReportFormData());
 
     if (createResponse.status === 201) {
         const id = createResponse.data.id;
-
         await submitDraft(id);
         closeReportModal();
     } else {
@@ -344,10 +248,7 @@ async function submitReport() {
 
 
 async function submitDraft(id) {
-    const response = await requestAPI(
-        `/api/report/${id}/submit/`,
-        'POST'
-    );
+    const response = await requestAPI(`/api/report/${id}/submit/`, 'POST');
 
     if (response.status === 200) {
         loadDashboardData(currentTab, currentPage);
@@ -371,38 +272,22 @@ function closeReportModal() {
 
 
 function setupDashboardEvents() {
-    document.getElementById('openCreateModalBtn').addEventListener(
-        'click',
-        openCreateModal
-    );
+    document.getElementById('btnBukaModal').addEventListener('click', openCreateModal);
 
-    document.getElementById('myReportsTab').addEventListener(
-        'click',
-        function () {
-            document.getElementById('myReportsTab').classList.add('active');
-            document.getElementById('feedTab').classList.remove('active');
-            loadDashboardData('my_reports', 1);
-        }
-    );
+    document.getElementById('myReportsTab').addEventListener('click', function () {
+        document.getElementById('myReportsTab').classList.add('active');
+        document.getElementById('tabFeedKota').classList.remove('active');
+        loadDashboardData('my_reports', 1);
+    });
 
-    document.getElementById('feedTab').addEventListener(
-        'click',
-        function () {
-            document.getElementById('feedTab').classList.add('active');
-            document.getElementById('myReportsTab').classList.remove('active');
-            loadDashboardData('feed', 1);
-        }
-    );
+    document.getElementById('tabFeedKota').addEventListener('click', function () {
+        document.getElementById('tabFeedKota').classList.add('active');
+        document.getElementById('myReportsTab').classList.remove('active');
+        loadDashboardData('feed', 1);
+    });
 
-    document.getElementById('saveDraftBtn').addEventListener(
-        'click',
-        saveDraft
-    );
-
-    document.getElementById('submitReportBtn').addEventListener(
-        'click',
-        submitReport
-    );
+    document.getElementById('btnDraft').addEventListener('click', saveDraft);
+    document.getElementById('btnSubmit').addEventListener('click', submitReport);
 }
 
 
